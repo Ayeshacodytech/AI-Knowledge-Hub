@@ -7,7 +7,7 @@ import { QAPage } from './pages/QAPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { SearchPage } from './pages/SearchPage';
-import { DashboardPage } from './pages/DashBoardPage';
+import { DashBoardPage } from './pages/DashBoardPage';
 import { AddEditDocumentPage } from './pages/AddEditDocumentPage';
 import {AlertCircle} from 'lucide-react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -345,7 +345,7 @@ function App() {
       case 'register':
         return <RegisterPage setCurrentPage={setCurrentPage} />;
       case 'dashboard':
-        return <DashboardPage setCurrentPage={setCurrentPage} />;
+        return <DashBoardPage setCurrentPage={setCurrentPage} />;
       case 'search':
         return <SearchPage />;
       case 'add-document':
@@ -355,7 +355,7 @@ function App() {
       case 'qa':
         return <QAPage />;
       default:
-        return <DashboardPage setCurrentPage={setCurrentPage} />;
+        return <DashBoardPage setCurrentPage={setCurrentPage} />;
     }
   };
 

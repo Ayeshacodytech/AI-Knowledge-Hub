@@ -7,7 +7,7 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 import { api } from "../App";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Search,Brain,Plus,Zap,Activity,TrendingUp,FileText,Users,Filter,Sparkles} from "lucide-react";
-export const DashboardPage = ({ setCurrentPage }) => {
+export const DashBoardPage = ({ setCurrentPage }) => {
   const [documents, setDocuments] = useState([]);
   const [activities, setActivities] = useState([]);
   const [currentPage, setCurrentPageNum] = useState(1);
