@@ -235,16 +235,12 @@ router.get('/suggestions', auth, async (req, res) => {
         if (!query || query.length < 2) {
             return res.json({ suggestions: [] });
         }
-
-        // Get title suggestions
         const titleSuggestions = await Document.find({
             isDeleted: false,
             title: { $regex: query, $options: 'i' }
         })
             .select('title')
             .limit(parseInt(limit) / 2);
-
-        // Get tag suggestions
         const tagSuggestions = await Document.aggregate([
             { $match: { isDeleted: false } },
             { $unwind: '$tags' },
@@ -265,13 +261,9 @@ router.get('/suggestions', auth, async (req, res) => {
         res.status(500).json({ message: 'Failed to get suggestions' });
     }
 });
-
-// Get search analytics/statistics
 router.get('/analytics', auth, async (req, res) => {
     try {
         const totalDocs = await Document.countDocuments({ isDeleted: false });
-
-        // Most searched tags
         const popularTags = await Document.aggregate([
             { $match: { isDeleted: false } },
             { $unwind: '$tags' },
@@ -279,8 +271,6 @@ router.get('/analytics', auth, async (req, res) => {
             { $sort: { count: -1 } },
             { $limit: 20 }
         ]);
-
-        // Documents by creation month (last 12 months)
         const currentDate = new Date();
         const twelveMonthsAgo = new Date();
         twelveMonthsAgo.setMonth(currentDate.getMonth() - 12);
@@ -303,8 +293,6 @@ router.get('/analytics', auth, async (req, res) => {
             },
             { $sort: { '_id.year': 1, '_id.month': 1 } }
         ]);
-
-        // Top authors by document count
         const topAuthors = await Document.aggregate([
             { $match: { isDeleted: false } },
             {
@@ -379,8 +367,6 @@ router.get('/analytics', auth, async (req, res) => {
         res.status(500).json({ message: 'Failed to get analytics' });
     }
 });
-
-// Similar documents recommendation
 router.get('/similar/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
@@ -432,8 +418,6 @@ router.get('/similar/:id', auth, async (req, res) => {
         res.status(500).json({ message: 'Failed to find similar documents' });
     }
 });
-
-// Full-text search with highlighting
 router.get('/highlight', auth, async (req, res) => {
     try {
         const { query, limit = 10, page = 1 } = req.query;
@@ -453,8 +437,6 @@ router.get('/highlight', auth, async (req, res) => {
             .sort({ score: { $meta: 'textScore' } })
             .skip(skip)
             .limit(parseInt(limit));
-
-        // Add highlighting to search results
         const highlightedDocuments = documents.map(doc => {
             const searchRegex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
 
