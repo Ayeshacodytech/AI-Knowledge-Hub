@@ -4,8 +4,6 @@ const { auth } = require('../middleware/Auth');
 const { summarizeDocument, generateTags, generateEmbedding, answerQuestion, cosineSimilarity} = require('../services/geminiService');
 
 const router = express.Router();
-
-// Team Q&A - Ask questions about documents
 router.post('/qa', auth, async (req, res) => {
     try {
         const { question, includeDeleted = false } = req.body;
@@ -13,8 +11,6 @@ router.post('/qa', auth, async (req, res) => {
         if (!question) {
             return res.status(400).json({ message: 'Question is required' });
         }
-
-        // Get all documents for context
         const searchQuery = includeDeleted ? {} : { isDeleted: false };
         const documents = await Document.find(searchQuery)
             .select('title content summary tags')
@@ -31,8 +27,6 @@ router.post('/qa', auth, async (req, res) => {
 
         // Get answer from Gemini
         const answer = await answerQuestion(question, documents);
-
-        // Find most relevant documents for this question (optional enhancement)
         let relevantDocs = [];
         try {
             const questionEmbedding = await generateEmbedding(question);
@@ -70,8 +64,6 @@ router.post('/qa', auth, async (req, res) => {
         res.status(500).json({ message: 'Failed to generate answer' });
     }
 });
-
-// Batch summarize multiple documents
 router.post('/batch-summarize', auth, async (req, res) => {
     try {
         const { documentIds } = req.body;
@@ -137,8 +129,6 @@ router.post('/batch-summarize', auth, async (req, res) => {
         res.status(500).json({ message: 'Batch summarization failed' });
     }
 });
-
-// Batch generate tags for multiple documents
 router.post('/batch-tags', auth, async (req, res) => {
     try {
         const { documentIds } = req.body;
@@ -199,8 +189,6 @@ router.post('/batch-tags', auth, async (req, res) => {
         res.status(500).json({ message: 'Batch tag generation failed' });
     }
 });
-
-// Get AI usage statistics
 router.get('/stats', auth, async (req, res) => {
     try {
         const totalDocs = await Document.countDocuments({ isDeleted: false });
@@ -216,8 +204,6 @@ router.get('/stats', auth, async (req, res) => {
             isDeleted: false,
             embedding: { $exists: true, $not: { $size: 0 } }
         });
-
-        // Get most common tags
         const topTags = await Document.aggregate([
             { $match: { isDeleted: false } },
             { $unwind: '$tags' },
