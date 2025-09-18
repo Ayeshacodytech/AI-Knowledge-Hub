@@ -19,13 +19,9 @@ export const useAuth = () => useContext(AuthContext);
 // API Service with Backend Integration
  export const api = {
    baseURL: "https://ai-knowledge-hub-8sdo.onrender.com/api",
-
-   // Helper function to get auth token
    getAuthToken: () => {
      return localStorage.getItem("token");
    },
-
-   // Helper function to make authenticated requests
    makeRequest: async (url, options = {}) => {
      const token = api.getAuthToken();
      const config = {
@@ -245,27 +241,6 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-
-// Components
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Main App Component
 function App() {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -372,19 +347,4 @@ function App() {
     </ErrorBoundary>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export default App;
