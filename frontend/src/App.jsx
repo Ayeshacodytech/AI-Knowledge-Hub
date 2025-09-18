@@ -7,7 +7,7 @@ import { QAPage } from './pages/QAPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { SearchPage } from './pages/SearchPage';
-import { DashboardPage } from './pages/DashboardPage';
+import { DashBoardPage } from './pages/DashboardPage';
 import { AddEditDocumentPage } from './pages/AddEditDocumentPage';
 import {AlertCircle} from 'lucide-react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
