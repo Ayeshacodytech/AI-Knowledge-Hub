@@ -18,7 +18,7 @@ export const useAuth = () => useContext(AuthContext);
 
 // API Service with Backend Integration
  export const api = {
-   baseURL: "https://ai-knowledge-hub-8sdo.onrender.com",
+   baseURL: "https://ai-knowledge-hub-8sdo.onrender.com/api",
 
    // Helper function to get auth token
    getAuthToken: () => {
