@@ -18,194 +18,198 @@ export const useAuth = () => useContext(AuthContext);
 
 // API Service with Backend Integration
  export const api = {
-  baseURL: 'http://localhost:5000/api',
+   baseURL: "https://ai-knowledge-hub-8sdo.onrender.com",
 
-  // Helper function to get auth token
-  getAuthToken: () => {
-    return localStorage.getItem('token');
-  },
+   // Helper function to get auth token
+   getAuthToken: () => {
+     return localStorage.getItem("token");
+   },
 
-  // Helper function to make authenticated requests
-  makeRequest: async (url, options = {}) => {
-    const token = api.getAuthToken();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers
-      },
-      ...options
-    };
+   // Helper function to make authenticated requests
+   makeRequest: async (url, options = {}) => {
+     const token = api.getAuthToken();
+     const config = {
+       headers: {
+         "Content-Type": "application/json",
+         ...(token && { Authorization: `Bearer ${token}` }),
+         ...options.headers,
+       },
+       ...options,
+     };
 
-    const response = await fetch(`${api.baseURL}${url}`, config);
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Network error' }));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
+     const response = await fetch(`${api.baseURL}${url}`, config);
 
-    return response.json();
-  },
+     if (!response.ok) {
+       const errorData = await response
+         .json()
+         .catch(() => ({ message: "Network error" }));
+       throw new Error(
+         errorData.message || `HTTP error! status: ${response.status}`
+       );
+     }
 
-  // Authentication endpoints
-  login: async (credentials) => {
-    return await api.makeRequest('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials)
-    });
-  },
+     return response.json();
+   },
 
-  register: async (userData) => {
-    return await api.makeRequest('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData)
-    });
-  },
+   // Authentication endpoints
+   login: async (credentials) => {
+     return await api.makeRequest("/auth/login", {
+       method: "POST",
+       body: JSON.stringify(credentials),
+     });
+   },
 
-  getCurrentUser: async () => {
-    return await api.makeRequest('/auth/me');
-  },
+   register: async (userData) => {
+     return await api.makeRequest("/auth/register", {
+       method: "POST",
+       body: JSON.stringify(userData),
+     });
+   },
 
-  // Document endpoints
-  getDocuments: async (page = 1, limit = 6) => {
-    return await api.makeRequest(`/documents?page=${page}&limit=${limit}`);
-  },
+   getCurrentUser: async () => {
+     return await api.makeRequest("/auth/me");
+   },
 
-  getDocument: async (id) => {
-    return await api.makeRequest(`/documents/${id}`);
-  },
+   // Document endpoints
+   getDocuments: async (page = 1, limit = 6) => {
+     return await api.makeRequest(`/documents?page=${page}&limit=${limit}`);
+   },
 
-  createDocument: async (docData) => {
-    return await api.makeRequest('/documents', {
-      method: 'POST',
-      body: JSON.stringify(docData)
-    });
-  },
+   getDocument: async (id) => {
+     return await api.makeRequest(`/documents/${id}`);
+   },
 
-  updateDocument: async (id, docData) => {
-    return await api.makeRequest(`/documents/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(docData)
-    });
-  },
+   createDocument: async (docData) => {
+     return await api.makeRequest("/documents", {
+       method: "POST",
+       body: JSON.stringify(docData),
+     });
+   },
 
-  deleteDocument: async (id) => {
-    return await api.makeRequest(`/documents/${id}`, {
-      method: 'DELETE'
-    });
-  },
+   updateDocument: async (id, docData) => {
+     return await api.makeRequest(`/documents/${id}`, {
+       method: "PUT",
+       body: JSON.stringify(docData),
+     });
+   },
 
-  summarizeDocument: async (id) => {
-    return await api.makeRequest(`/documents/${id}/summarize`, {
-      method: 'POST'
-    });
-  },
+   deleteDocument: async (id) => {
+     return await api.makeRequest(`/documents/${id}`, {
+       method: "DELETE",
+     });
+   },
 
-  generateTags: async (id) => {
-    return await api.makeRequest(`/documents/${id}/generate-tags`, {
-      method: 'POST'
-    });
-  },
+   summarizeDocument: async (id) => {
+     return await api.makeRequest(`/documents/${id}/summarize`, {
+       method: "POST",
+     });
+   },
 
-  getActivity: async () => {
-    return await api.makeRequest('/documents/activity');
-  },
+   generateTags: async (id) => {
+     return await api.makeRequest(`/documents/${id}/generate-tags`, {
+       method: "POST",
+     });
+   },
 
-  // Search endpoints
-  searchText: async (query, tags = [], page = 1, limit = 10) => {
-    const params = new URLSearchParams({
-      query,
-      page: page.toString(),
-      limit: limit.toString()
-    });
-    
-    if (tags.length > 0) {
-      params.append('tags', tags.join(','));
-    }
+   getActivity: async () => {
+     return await api.makeRequest("/documents/activity");
+   },
 
-    return await api.makeRequest(`/search/text?${params}`);
-  },
+   // Search endpoints
+   searchText: async (query, tags = [], page = 1, limit = 10) => {
+     const params = new URLSearchParams({
+       query,
+       page: page.toString(),
+       limit: limit.toString(),
+     });
 
-  searchSemantic: async (query, limit = 10, threshold = 0.3) => {
-    const params = new URLSearchParams({
-      query,
-      limit: limit.toString(),
-      threshold: threshold.toString()
-    });
+     if (tags.length > 0) {
+       params.append("tags", tags.join(","));
+     }
 
-    return await api.makeRequest(`/search/semantic?${params}`);
-  },
+     return await api.makeRequest(`/search/text?${params}`);
+   },
 
-  searchHighlight: async (query, page = 1, limit = 10) => {
-    const params = new URLSearchParams({
-      query,
-      page: page.toString(),
-      limit: limit.toString()
-    });
+   searchSemantic: async (query, limit = 10, threshold = 0.3) => {
+     const params = new URLSearchParams({
+       query,
+       limit: limit.toString(),
+       threshold: threshold.toString(),
+     });
 
-    return await api.makeRequest(`/search/highlight?${params}`);
-  },
+     return await api.makeRequest(`/search/semantic?${params}`);
+   },
 
-  advancedSearch: async (searchParams) => {
-    return await api.makeRequest('/search/advanced', {
-      method: 'POST',
-      body: JSON.stringify(searchParams)
-    });
-  },
+   searchHighlight: async (query, page = 1, limit = 10) => {
+     const params = new URLSearchParams({
+       query,
+       page: page.toString(),
+       limit: limit.toString(),
+     });
 
-  getSimilarDocuments: async (id, limit = 5) => {
-    return await api.makeRequest(`/search/similar/${id}?limit=${limit}`);
-  },
+     return await api.makeRequest(`/search/highlight?${params}`);
+   },
 
-  getAllTags: async () => {
-    return await api.makeRequest('/search/tags');
-  },
+   advancedSearch: async (searchParams) => {
+     return await api.makeRequest("/search/advanced", {
+       method: "POST",
+       body: JSON.stringify(searchParams),
+     });
+   },
 
-  getSearchSuggestions: async (query, limit = 10) => {
-    const params = new URLSearchParams({
-      query,
-      limit: limit.toString()
-    });
+   getSimilarDocuments: async (id, limit = 5) => {
+     return await api.makeRequest(`/search/similar/${id}?limit=${limit}`);
+   },
 
-    return await api.makeRequest(`/search/suggestions?${params}`);
-  },
+   getAllTags: async () => {
+     return await api.makeRequest("/search/tags");
+   },
 
-  getSearchAnalytics: async () => {
-    return await api.makeRequest('/search/analytics');
-  },
+   getSearchSuggestions: async (query, limit = 10) => {
+     const params = new URLSearchParams({
+       query,
+       limit: limit.toString(),
+     });
 
-  // AI endpoints
-  askQuestion: async (question, includeDeleted = false) => {
-    return await api.makeRequest('/ai/qa', {
-      method: 'POST',
-      body: JSON.stringify({ question, includeDeleted })
-    });
-  },
+     return await api.makeRequest(`/search/suggestions?${params}`);
+   },
 
-  batchSummarize: async (documentIds) => {
-    return await api.makeRequest('/ai/batch-summarize', {
-      method: 'POST',
-      body: JSON.stringify({ documentIds })
-    });
-  },
+   getSearchAnalytics: async () => {
+     return await api.makeRequest("/search/analytics");
+   },
 
-  batchGenerateTags: async (documentIds) => {
-    return await api.makeRequest('/ai/batch-tags', {
-      method: 'POST',
-      body: JSON.stringify({ documentIds })
-    });
-  },
+   // AI endpoints
+   askQuestion: async (question, includeDeleted = false) => {
+     return await api.makeRequest("/ai/qa", {
+       method: "POST",
+       body: JSON.stringify({ question, includeDeleted }),
+     });
+   },
 
-  getAIStats: async () => {
-    return await api.makeRequest('/ai/stats');
-  },
+   batchSummarize: async (documentIds) => {
+     return await api.makeRequest("/ai/batch-summarize", {
+       method: "POST",
+       body: JSON.stringify({ documentIds }),
+     });
+   },
 
-  // Health check
-  healthCheck: async () => {
-    const response = await fetch('http://localhost:5000/');
-    return response.json();
-  }
-};
+   batchGenerateTags: async (documentIds) => {
+     return await api.makeRequest("/ai/batch-tags", {
+       method: "POST",
+       body: JSON.stringify({ documentIds }),
+     });
+   },
+
+   getAIStats: async () => {
+     return await api.makeRequest("/ai/stats");
+   },
+
+   // Health check
+   healthCheck: async () => {
+     const response = await fetch("https://ai-knowledge-hub-8sdo.onrender.com");
+     return response.json();
+   },
+ };
 
 // Connection status hook
 
