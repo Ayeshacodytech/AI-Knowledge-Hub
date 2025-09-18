@@ -210,14 +210,6 @@ export const useAuth = () => useContext(AuthContext);
      return response.json();
    },
  };
-
-// Connection status hook
-
-
-// Connection Status Component
-
-
-// Error boundary component
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
